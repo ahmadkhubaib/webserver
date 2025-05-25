@@ -11,8 +11,8 @@ int main()
         boost::asio::make_work_guard(io_context)
     );
 
-    http_client::header::client_header header(io_context);
-    header();
+    http_client::runner::client_runner runner(io_context);
+    runner();
 
 
     std::thread t([&io_context](){
