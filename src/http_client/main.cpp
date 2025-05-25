@@ -1,6 +1,6 @@
 #include <iostream>
 #include <boost/asio.hpp>
-#include "http_client.hpp"
+#include "core.hpp"
 
 int main()
 {

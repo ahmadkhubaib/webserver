@@ -1,8 +1,8 @@
 #pragma once
 #include <memory>
-#include "http_client/parameter.hpp"
-#include "http_client/common/request.hpp"
-#include "http_client/common/response.hpp"
+#include "http_client/core/parameter.hpp"
+#include "http_client/core/request.hpp"
+#include "http_client/core/response.hpp"
 
 namespace http_client
 {
