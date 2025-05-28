@@ -1,7 +1,7 @@
 #pragma once
 
-#include "http_client/core/client.hpp"
-#include "http_client/core/runner.hpp"
-#include "http_client/core/parameter.hpp"
-#include "http_client/core/response.hpp"
-#include "http_client/core/request.hpp"
+#include "core/client.hpp"
+#include "core/runner.hpp"
+#include "core/parameter.hpp"
+#include "core/response.hpp"
+#include "core/request.hpp"

@@ -1,22 +1,18 @@
 #pragma once
 #include <memory>
-#include "http_client/core/parameter.hpp"
-#include "http_client/core/request.hpp"
-#include "http_client/core/response.hpp"
 
-namespace http_client
-{
-    namespace client
+#include "parameter.hpp"
+#include "request.hpp"
+
+namespace http_client::client {
+    struct _http_client
     {
-        struct _http_client
+        static std::shared_ptr<_http_client> make(parameter::client_parameter parameter)
         {
-            static std::shared_ptr<_http_client> make(http_client::parameter::client_parameter parameter)
-            {
-                return std::make_shared<_http_client>();
-            }
+            return std::make_shared<_http_client>();
+        }
 
-            template<typename T>
-            void send_async(const request::http_request & request, T func){}
-        };
-    }
+        template<typename T>
+        void send_async(const request::http_request & request, T func){}
+    };
 }
