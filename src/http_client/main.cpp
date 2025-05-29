@@ -6,6 +6,7 @@ int main()
 {
 
     boost::asio::io_context io_context;
+    std::cout << "started" << std::endl;
 
     auto dummyWork = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
         boost::asio::make_work_guard(io_context)
@@ -22,6 +23,14 @@ int main()
         catch (std::exception& e) {
             std::cerr << "Exception: " << e.what() << "\n";
         } });
-    std::cout << "Hello, World! from Client" << std::endl;
+
+
+    std::cout << "Press enter to stop" << std::endl;
+    std::cin.get();
+
+    dummyWork.reset();
+    io_context.stop();
+
+    std::cout << "finished" << std::endl;
     return 0;
 }
