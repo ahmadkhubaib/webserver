@@ -18,6 +18,12 @@ namespace http_client::runner {
 
             request::http_request request;
             client->send_async(request, [](std::error_code err, response::http_response response) {
+                if (err) {
+                    std::cerr << "Error: " << err.message() << std::endl;
+                } else {
+                    std::cout << "Response body: " << response.body << std::endl;
+                    std::cout << "Response status code: " << response.status_code << std::endl;
+                }
             });
         }
     };
