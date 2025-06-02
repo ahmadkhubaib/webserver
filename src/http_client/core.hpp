@@ -5,3 +5,4 @@
 #include "core/parameter.hpp"
 #include "core/response.hpp"
 #include "core/request.hpp"
+#include "core/connection.hpp"
