@@ -2,29 +2,50 @@
 #include "parameter.hpp"
 #include "request.hpp"
 #include "response.hpp"
+#include "connection.hpp"
+#include <boost/asio.hpp>
+#include <future>
 
 namespace http_client::runner {
     struct client_runner {
-#include <boost/asio.hpp>
         boost::asio::any_io_executor _executor;
 
         explicit client_runner(boost::asio::io_context &io_context) : _executor(io_context.get_executor()) {
         }
 
         void operator()() {
-            parameter::client_parameter params;
+            http_client::parameter::client_parameter params;
             params._executor = _executor;
-            auto client = client::_http_client::make(std::move(params));
+            const std::shared_ptr<http_client::client::_http_client> client = http_client::client::_http_client::make(
+                std::move(params));
 
-            request::http_request request;
-            client->send_async(request, [](std::error_code err, response::http_response response) {
-                if (err) {
-                    std::cerr << "Error: " << err.message() << std::endl;
-                } else {
-                    std::cout << "Response body: " << response.body << std::endl;
-                    std::cout << "Response status code: " << response.status_code << std::endl;
-                }
-            });
+
+            http_client::connection::client_connection connection;
+            connection.host = "google.com";
+            connection.port = "80";
+
+            http_client::request::http_request request;
+            std::promise<std::pair<std::error_code, http_client::response::http_response> > operation_promise;
+            auto operation_future = operation_promise.get_future();
+
+            client->connect_async(std::move(connection), request, [
+                                      &operation_promise
+                                  ](
+                              std::error_code err,
+                              http_client::response::http_response response
+                          ) {
+                                      operation_promise.set_value(std::make_pair(err, std::move(response)));
+                                  });
+
+            auto [error, response] = operation_future.get();
+
+            if (error) {
+                std::cerr << "Operation failed: " << error.message() << std::endl;
+                return;
+            }
+
+            std::cout << "Response body: " << response.body << std::endl;
+            std::cout << "Response status code: " << response.status_code << std::endl;
         }
     };
 }

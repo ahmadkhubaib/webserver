@@ -12,10 +12,6 @@ int main()
         boost::asio::make_work_guard(io_context)
     );
 
-    http_client::runner::client_runner runner(io_context);
-    runner();
-
-
     std::thread t([&io_context](){
         try{
             io_context.run();
@@ -24,6 +20,8 @@ int main()
             std::cerr << "Exception: " << e.what() << "\n";
         } });
 
+    http_client::runner::client_runner runner(io_context);
+    runner();
 
     std::cout << "Press enter to stop" << std::endl;
     std::cin.get();
