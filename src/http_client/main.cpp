@@ -8,7 +8,7 @@ int main()
     boost::asio::io_context io_context;
     std::cout << "started" << std::endl;
 
-    auto dummyWork = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
+    auto dummy_work = std::make_unique<boost::asio::executor_work_guard<boost::asio::io_context::executor_type>>(
         boost::asio::make_work_guard(io_context)
     );
 
@@ -26,7 +26,7 @@ int main()
     std::cout << "Press enter to stop" << std::endl;
     std::cin.get();
 
-    dummyWork.reset();
+    dummy_work.reset();
     io_context.stop();
 
     std::cout << "finished" << std::endl;

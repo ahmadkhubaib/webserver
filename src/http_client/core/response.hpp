@@ -7,5 +7,6 @@ namespace http_client::response {
     {
         std::string body;
         int status_code = 400;
+        std::string data;
     };
 }

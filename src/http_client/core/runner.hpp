@@ -21,14 +21,20 @@ namespace http_client::runner {
 
 
             http_client::connection::client_connection connection;
-            connection.host = "google.com";
+            connection.host = "httpbin.org";
             connection.port = "80";
+
+            std::string message =
+                    "GET /get HTTP/1.1" "\r\n"
+                    "Host: httpbin.org" "\r\n"
+                    "\r\n"
+                    ;
 
             http_client::request::http_request request;
             std::promise<std::pair<std::error_code, http_client::response::http_response> > operation_promise;
             auto operation_future = operation_promise.get_future();
 
-            client->connect_async(std::move(connection), request, [
+            client->connect_async(std::move(connection), message, [
                                       &operation_promise
                                   ](
                               std::error_code err,
@@ -44,8 +50,7 @@ namespace http_client::runner {
                 return;
             }
 
-            std::cout << "Response body: " << response.body << std::endl;
-            std::cout << "Response status code: " << response.status_code << std::endl;
+            std::cout << "Response Data" << response.data << std::endl;
         }
     };
 }
