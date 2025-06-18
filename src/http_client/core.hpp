@@ -6,3 +6,5 @@
 #include "core/response.hpp"
 #include "core/request.hpp"
 #include "core/connection.hpp"
+#include "core/stream_parser.hpp"
+#include "core/stream_populator.hpp"
