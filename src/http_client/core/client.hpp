@@ -5,6 +5,8 @@
 #include "request.hpp"
 #include "response.hpp"
 #include "connection.hpp"
+#include "stream_populator.hpp"
+#include "stream_parser.hpp"
 
 namespace http_client::client {
     struct _http_client : std::enable_shared_from_this<http_client::client::_http_client> {
@@ -91,16 +93,19 @@ namespace http_client::client {
         boost::asio::ip::tcp::socket _socket;
         boost::asio::streambuf _request_buffer;
         boost::asio::streambuf _response_buffer;
+        http_client::parser::stream_parser _stream_parser;
+        http_client::parser::stream_populator _populator;
 
         explicit _http_client(http_client::parameter::client_parameter parameter)
             : _parameter(std::move(parameter)),
               _resolver(_parameter._executor),
-              _socket(_parameter._executor) {
+              _socket(_parameter._executor),
+              _stream_parser(&_populator) {
         }
 
         template<typename T>
         void read_response_async(T callable) {
-            boost::asio::async_read_until(_socket, _response_buffer, "\r\n\r\n",
+            boost::asio::async_read_until(_socket, _response_buffer, _stream_parser,
                                           [this, local_this = this->shared_from_this(), callable = std::move(callable)](
                                       boost::system::error_code ec, size_t bytes_read) mutable {
                                               if (ec) {
